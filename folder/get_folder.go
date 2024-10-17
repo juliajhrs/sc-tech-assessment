@@ -47,9 +47,9 @@ func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) ([]Folder, err
 
 	if !checkCorrectOrg {
 		if checkWrongOrg {
-			return nil, errors.New("Folder does not exist in the specified organization.")
+			return nil, errors.New("Folder does not exist in the specified organization")
 		}
-		return nil, errors.New("Folder does not exist.")
+		return nil, errors.New("Folder does not exist")
 	}
 	return res, nil
 }
