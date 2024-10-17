@@ -2,6 +2,7 @@ package folder_test
 
 import (
 	"errors"
+	"reflect"
 	"testing"
 
 	"github.com/georgechieng-sc/interns-2022/folder"
@@ -267,8 +268,18 @@ func Test_folder_GetAllChildFolders(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			f := folder.NewDriver(tt.folders)
-			get := f.GetFoldersByOrgID(tt.orgID)
-			assert.Equal(t, tt.want, get)
+			get, err := f.GetAllChildFolders(tt.orgID, tt.fname)
+			if err != nil && tt.err != nil && err.Error() != tt.err.Error() { // both nil errors
+				t.Errorf("GetAllChildFolders() error = %v, want %v", err, tt.err)
+				return
+			} else if (err == nil && tt.err != nil) || (err != nil && tt.err == nil) { // one nil, one isnt
+				t.Errorf("GetAllChildFolders() error = %v, want %v", err, tt.err)
+				return
+			}
+
+			if !reflect.DeepEqual(get, tt.want) {
+				t.Errorf("GetAllChildFolders() = %v, want %v", get, tt.want)
+			}
 		})
 	}
 }
