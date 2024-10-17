@@ -12,9 +12,13 @@ import (
 func Test_folder_GetFoldersByOrgID(t *testing.T) {
 	t.Parallel()
 
-	org1 := uuid.NewV4()
-	org2 := uuid.NewV4()
-	org3 := uuid.NewV4()
+	org1Str := "38b9879b-f73b-4b0e-b9d9-4fc4c23643a7"
+	org2Str := "c1556e17-b7c0-45a3-a6ae-9546248fb17a"
+	org3Str := "9b4cdb0a-cfea-4f9d-8a68-24f038fae385"
+
+	org1 := uuid.FromStringOrNil(org1Str)
+	org2 := uuid.FromStringOrNil(org2Str)
+	org3 := uuid.FromStringOrNil(org3Str)
 
 	tests := [...]struct {
 		name    string
@@ -24,44 +28,82 @@ func Test_folder_GetFoldersByOrgID(t *testing.T) {
 	}{
 		// TODO: your tests here
 		{
-			name: ""
-			orgID: org1
+			name:  "One folder in organization",
+			orgID: org1,
 			folders: []folder.Folder{
-
+				{
+					Name:  "creative-scalphunter",
+					OrgId: org1,
+					Paths: "creative-scalphunter",
+				},
 			},
 			want: []folder.Folder{
-
+				{
+					Name:  "creative-scalphunter",
+					OrgId: org1,
+					Paths: "creative-scalphunter",
+				},
 			},
 		},
 		{
-			name: ""
-			orgID: org1
+			name:  "Multiple folders in organization",
+			orgID: org1,
 			folders: []folder.Folder{
-
+				{
+					Name:  "creative-scalphunter",
+					OrgId: org1,
+					Paths: "creative-scalphunter",
+				},
+				{
+					Name:  "topical-micromax",
+					OrgId: org1,
+					Paths: "creative-scalphunter.clear-arclight.topical-micromax",
+				},
+				{
+					Name:  "dashing-mirage",
+					OrgId: org2,
+					Paths: "noble-vixen.fast-watchmen.full-weapon-x.honest-greymalkin.dashing-mirage",
+				},
+				{
+					Name:  "steady-insect",
+					OrgId: org3,
+					Paths: "steady-insect",
+				},
 			},
 			want: []folder.Folder{
-
+				{
+					Name:  "creative-scalphunter",
+					OrgId: org1,
+					Paths: "creative-scalphunter",
+				},
+				{
+					Name:  "topical-micromax",
+					OrgId: org1,
+					Paths: "creative-scalphunter.clear-arclight.topical-micromax",
+				},
 			},
 		},
 		{
-			name: ""
-			orgID: org1
+			name:  "No folders in organization",
+			orgID: org3,
 			folders: []folder.Folder{
-
+				{
+					Name:  "creative-scalphunter",
+					OrgId: org1,
+					Paths: "creative-scalphunter",
+				},
+				{
+					Name:  "topical-micromax",
+					OrgId: org1,
+					Paths: "creative-scalphunter.clear-arclight.topical-micromax",
+				},
+				{
+					Name:  "dashing-mirage",
+					OrgId: org2,
+					Paths: "noble-vixen.fast-watchmen.full-weapon-x.honest-greymalkin.dashing-mirage",
+				},
 			},
-			want: []folder.Folder{
-
-			},
-		},
-		{
-			name: ""
-			orgID: org1
-			folders: []folder.Folder{
-
-			},
-			want: []folder.Folder{
-
-			},
+			want: []folder.Folder{},
 		},
 	}
 	for _, tt := range tests {
