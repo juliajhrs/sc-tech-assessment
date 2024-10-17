@@ -2,11 +2,11 @@ package folder_test
 
 import (
 	"errors"
+	"reflect"
 	"testing"
 
 	"github.com/georgechieng-sc/interns-2022/folder"
 	"github.com/gofrs/uuid"
-	"github.com/stretchr/testify/assert"
 )
 
 func Test_folder_MoveFolder(t *testing.T) {
@@ -31,22 +31,8 @@ func Test_folder_MoveFolder(t *testing.T) {
 		// TODO: your tests here
 		{
 			name: "Moving folder within the same parent folder",
-			src:  "creative-scalphunter",
-			dest: "",
-			folders: []folder.Folder{
-				{
-					Name:  "creative-scalphunter",
-					OrgId: org1,
-					Paths: "creative-scalphunter",
-				},
-			},
-			want: []folder.Folder{},
-			err:  nil,
-		},
-		{
-			name: "Moving folder under a different parent folder",
-			src:  "creative-scalphunter",
-			dest: "",
+			src:  "clear-arclight",
+			dest: "close-layla-miller",
 			folders: []folder.Folder{
 				{
 					Name:  "creative-scalphunter",
@@ -81,6 +67,49 @@ func Test_folder_MoveFolder(t *testing.T) {
 			},
 			want: []folder.Folder{
 				{
+					Name:  "creative-scalphunter",
+					OrgId: org1,
+					Paths: "creative-scalphunter",
+				},
+				{
+					Name:  "clear-arclight",
+					OrgId: org1,
+					Paths: "creative-scalphunter.close-layla-miller.clear-arclight",
+				},
+				{
+					Name:  "topical-micromax",
+					OrgId: org1,
+					Paths: "creative-scalphunter.close-layla-miller.clear-arclight.topical-micromax",
+				},
+				{
+					Name:  "close-layla-miller",
+					OrgId: org1,
+					Paths: "creative-scalphunter.close-layla-miller",
+				},
+				{
+					Name:  "dashing-mirage",
+					OrgId: org2,
+					Paths: "noble-vixen.fast-watchmen.full-weapon-x.honest-greymalkin.dashing-mirage",
+				},
+				{
+					Name:  "steady-insect",
+					OrgId: org3,
+					Paths: "steady-insect",
+				},
+			},
+			err: nil,
+		},
+		{
+			name: "Moving folder under a different parent folder",
+			src:  "clear-arclight",
+			dest: "steady-insect",
+			folders: []folder.Folder{
+				{
+					Name:  "creative-scalphunter",
+					OrgId: org1,
+					Paths: "creative-scalphunter",
+				},
+				{
 					Name:  "clear-arclight",
 					OrgId: org1,
 					Paths: "creative-scalphunter.clear-arclight",
@@ -94,14 +123,56 @@ func Test_folder_MoveFolder(t *testing.T) {
 					Name:  "close-layla-miller",
 					OrgId: org1,
 					Paths: "creative-scalphunter.close-layla-miller",
+				},
+				{
+					Name:  "dashing-mirage",
+					OrgId: org2,
+					Paths: "noble-vixen.fast-watchmen.full-weapon-x.honest-greymalkin.dashing-mirage",
+				},
+				{
+					Name:  "steady-insect",
+					OrgId: org1,
+					Paths: "steady-insect",
+				},
+			},
+			want: []folder.Folder{
+				{
+					Name:  "creative-scalphunter",
+					OrgId: org1,
+					Paths: "creative-scalphunter",
+				},
+				{
+					Name:  "clear-arclight",
+					OrgId: org1,
+					Paths: "steady-insect.clear-arclight",
+				},
+				{
+					Name:  "topical-micromax",
+					OrgId: org1,
+					Paths: "steady-insect.clear-arclight.topical-micromax",
+				},
+				{
+					Name:  "close-layla-miller",
+					OrgId: org1,
+					Paths: "creative-scalphunter.close-layla-miller",
+				},
+				{
+					Name:  "dashing-mirage",
+					OrgId: org2,
+					Paths: "noble-vixen.fast-watchmen.full-weapon-x.honest-greymalkin.dashing-mirage",
+				},
+				{
+					Name:  "steady-insect",
+					OrgId: org1,
+					Paths: "steady-insect",
 				},
 			},
 			err: nil,
 		},
 		{
 			name: "Moving folder to a different organization",
-			src:  "creative-scalphunter",
-			dest: "",
+			src:  "clear-arclight",
+			dest: "dashing-mirage",
 			folders: []folder.Folder{
 				{
 					Name:  "creative-scalphunter",
@@ -109,23 +180,38 @@ func Test_folder_MoveFolder(t *testing.T) {
 					Paths: "creative-scalphunter",
 				},
 				{
+					Name:  "clear-arclight",
+					OrgId: org1,
+					Paths: "creative-scalphunter.clear-arclight",
+				},
+				{
 					Name:  "topical-micromax",
 					OrgId: org1,
 					Paths: "creative-scalphunter.clear-arclight.topical-micromax",
+				},
+				{
+					Name:  "close-layla-miller",
+					OrgId: org1,
+					Paths: "creative-scalphunter.close-layla-miller",
 				},
 				{
 					Name:  "dashing-mirage",
 					OrgId: org2,
 					Paths: "noble-vixen.fast-watchmen.full-weapon-x.honest-greymalkin.dashing-mirage",
 				},
+				{
+					Name:  "steady-insect",
+					OrgId: org3,
+					Paths: "steady-insect",
+				},
 			},
 			want: []folder.Folder{},
-			err:  errors.New("Folder does not exist in the specified organization"),
+			err:  errors.New("Cannot move a folder to a different organization"),
 		},
 		{
 			name: "Moving folder to itself",
-			src:  "creative-scalphunter",
-			dest: "",
+			src:  "clear-arclight",
+			dest: "clear-arclight",
 			folders: []folder.Folder{
 				{
 					Name:  "creative-scalphunter",
@@ -152,14 +238,19 @@ func Test_folder_MoveFolder(t *testing.T) {
 					OrgId: org2,
 					Paths: "noble-vixen.fast-watchmen.full-weapon-x.honest-greymalkin.dashing-mirage",
 				},
+				{
+					Name:  "steady-insect",
+					OrgId: org3,
+					Paths: "steady-insect",
+				},
 			},
 			want: []folder.Folder{},
-			err:  errors.New("Folder does not exist"),
+			err:  errors.New("Cannot move a folder to itself"),
 		},
 		{
 			name: "Moving folder to a child of itself",
-			src:  "creative-scalphunter",
-			dest: "",
+			src:  "clear-arclight",
+			dest: "topical-micromax",
 			folders: []folder.Folder{
 				{
 					Name:  "creative-scalphunter",
@@ -186,14 +277,19 @@ func Test_folder_MoveFolder(t *testing.T) {
 					OrgId: org2,
 					Paths: "noble-vixen.fast-watchmen.full-weapon-x.honest-greymalkin.dashing-mirage",
 				},
+				{
+					Name:  "steady-insect",
+					OrgId: org3,
+					Paths: "steady-insect",
+				},
 			},
 			want: []folder.Folder{},
-			err:  errors.New("Folder does not exist"),
+			err:  errors.New("Cannot move a folder to a child of itself"),
 		},
 		{
 			name: "Source folder does not exist",
-			src:  "creative-scalphunter",
-			dest: "",
+			src:  "Random-folder",
+			dest: "clear-arclight",
 			folders: []folder.Folder{
 				{
 					Name:  "creative-scalphunter",
@@ -205,29 +301,14 @@ func Test_folder_MoveFolder(t *testing.T) {
 					OrgId: org1,
 					Paths: "creative-scalphunter.clear-arclight",
 				},
-				{
-					Name:  "topical-micromax",
-					OrgId: org1,
-					Paths: "creative-scalphunter.clear-arclight.topical-micromax",
-				},
-				{
-					Name:  "close-layla-miller",
-					OrgId: org1,
-					Paths: "creative-scalphunter.close-layla-miller",
-				},
-				{
-					Name:  "dashing-mirage",
-					OrgId: org2,
-					Paths: "noble-vixen.fast-watchmen.full-weapon-x.honest-greymalkin.dashing-mirage",
-				},
 			},
 			want: []folder.Folder{},
-			err:  errors.New("Folder does not exist"),
+			err:  errors.New("Source folder does not exist"),
 		},
 		{
 			name: "Destination folder does not exist",
 			src:  "creative-scalphunter",
-			dest: "",
+			dest: "Random-folder",
 			folders: []folder.Folder{
 				{
 					Name:  "creative-scalphunter",
@@ -239,31 +320,26 @@ func Test_folder_MoveFolder(t *testing.T) {
 					OrgId: org1,
 					Paths: "creative-scalphunter.clear-arclight",
 				},
-				{
-					Name:  "topical-micromax",
-					OrgId: org1,
-					Paths: "creative-scalphunter.clear-arclight.topical-micromax",
-				},
-				{
-					Name:  "close-layla-miller",
-					OrgId: org1,
-					Paths: "creative-scalphunter.close-layla-miller",
-				},
-				{
-					Name:  "dashing-mirage",
-					OrgId: org2,
-					Paths: "noble-vixen.fast-watchmen.full-weapon-x.honest-greymalkin.dashing-mirage",
-				},
 			},
 			want: []folder.Folder{},
-			err:  errors.New("Folder does not exist"),
+			err:  errors.New("Destination folder does not exist"),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			f := folder.NewDriver(tt.folders)
-			get := f.GetFoldersByOrgID(tt.orgID)
-			assert.Equal(t, tt.want, get)
+			get, err := f.MoveFolder(tt.src, tt.dest)
+			if err != nil && tt.err != nil && err.Error() != tt.err.Error() { // both nil errors
+				t.Errorf("MoveFolder() error = %v, want %v", err, tt.err)
+				return
+			} else if (err == nil && tt.err != nil) || (err != nil && tt.err == nil) { // one nil, one isnt
+				t.Errorf("MoveFolder() error = %v, want %v", err, tt.err)
+				return
+			}
+
+			if !reflect.DeepEqual(get, tt.want) {
+				t.Errorf("MoveFolder() = %v, want %v", get, tt.want)
+			}
 		})
 	}
 }
