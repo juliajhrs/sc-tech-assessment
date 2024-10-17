@@ -22,17 +22,17 @@ func Test_folder_MoveFolder(t *testing.T) {
 
 	tests := [...]struct {
 		name    string
-		fname   string
-		orgID   uuid.UUID
+		src     string
+		dest    string
 		folders []folder.Folder
 		want    []folder.Folder
 		err     error
 	}{
 		// TODO: your tests here
 		{
-			name:  "No child folders",
-			fname: "creative-scalphunter",
-			orgID: org1,
+			name: "Moving folder within the same parent folder",
+			src:  "creative-scalphunter",
+			dest: "",
 			folders: []folder.Folder{
 				{
 					Name:  "creative-scalphunter",
@@ -44,9 +44,9 @@ func Test_folder_MoveFolder(t *testing.T) {
 			err:  nil,
 		},
 		{
-			name:  "Multiple child folders",
-			fname: "creative-scalphunter",
-			orgID: org1,
+			name: "Moving folder under a different parent folder",
+			src:  "creative-scalphunter",
+			dest: "",
 			folders: []folder.Folder{
 				{
 					Name:  "creative-scalphunter",
@@ -99,9 +99,9 @@ func Test_folder_MoveFolder(t *testing.T) {
 			err: nil,
 		},
 		{
-			name:  "Folder does not exist in the specified organization",
-			fname: "dashing-mirage",
-			orgID: org1,
+			name: "Moving folder to a different organization",
+			src:  "creative-scalphunter",
+			dest: "",
 			folders: []folder.Folder{
 				{
 					Name:  "creative-scalphunter",
@@ -123,9 +123,111 @@ func Test_folder_MoveFolder(t *testing.T) {
 			err:  errors.New("Folder does not exist in the specified organization"),
 		},
 		{
-			name:  "Folder does not exist at all",
-			fname: "steady-insect",
-			orgID: org1,
+			name: "Moving folder to itself",
+			src:  "creative-scalphunter",
+			dest: "",
+			folders: []folder.Folder{
+				{
+					Name:  "creative-scalphunter",
+					OrgId: org1,
+					Paths: "creative-scalphunter",
+				},
+				{
+					Name:  "clear-arclight",
+					OrgId: org1,
+					Paths: "creative-scalphunter.clear-arclight",
+				},
+				{
+					Name:  "topical-micromax",
+					OrgId: org1,
+					Paths: "creative-scalphunter.clear-arclight.topical-micromax",
+				},
+				{
+					Name:  "close-layla-miller",
+					OrgId: org1,
+					Paths: "creative-scalphunter.close-layla-miller",
+				},
+				{
+					Name:  "dashing-mirage",
+					OrgId: org2,
+					Paths: "noble-vixen.fast-watchmen.full-weapon-x.honest-greymalkin.dashing-mirage",
+				},
+			},
+			want: []folder.Folder{},
+			err:  errors.New("Folder does not exist"),
+		},
+		{
+			name: "Moving folder to a child of itself",
+			src:  "creative-scalphunter",
+			dest: "",
+			folders: []folder.Folder{
+				{
+					Name:  "creative-scalphunter",
+					OrgId: org1,
+					Paths: "creative-scalphunter",
+				},
+				{
+					Name:  "clear-arclight",
+					OrgId: org1,
+					Paths: "creative-scalphunter.clear-arclight",
+				},
+				{
+					Name:  "topical-micromax",
+					OrgId: org1,
+					Paths: "creative-scalphunter.clear-arclight.topical-micromax",
+				},
+				{
+					Name:  "close-layla-miller",
+					OrgId: org1,
+					Paths: "creative-scalphunter.close-layla-miller",
+				},
+				{
+					Name:  "dashing-mirage",
+					OrgId: org2,
+					Paths: "noble-vixen.fast-watchmen.full-weapon-x.honest-greymalkin.dashing-mirage",
+				},
+			},
+			want: []folder.Folder{},
+			err:  errors.New("Folder does not exist"),
+		},
+		{
+			name: "Source folder does not exist",
+			src:  "creative-scalphunter",
+			dest: "",
+			folders: []folder.Folder{
+				{
+					Name:  "creative-scalphunter",
+					OrgId: org1,
+					Paths: "creative-scalphunter",
+				},
+				{
+					Name:  "clear-arclight",
+					OrgId: org1,
+					Paths: "creative-scalphunter.clear-arclight",
+				},
+				{
+					Name:  "topical-micromax",
+					OrgId: org1,
+					Paths: "creative-scalphunter.clear-arclight.topical-micromax",
+				},
+				{
+					Name:  "close-layla-miller",
+					OrgId: org1,
+					Paths: "creative-scalphunter.close-layla-miller",
+				},
+				{
+					Name:  "dashing-mirage",
+					OrgId: org2,
+					Paths: "noble-vixen.fast-watchmen.full-weapon-x.honest-greymalkin.dashing-mirage",
+				},
+			},
+			want: []folder.Folder{},
+			err:  errors.New("Folder does not exist"),
+		},
+		{
+			name: "Destination folder does not exist",
+			src:  "creative-scalphunter",
+			dest: "",
 			folders: []folder.Folder{
 				{
 					Name:  "creative-scalphunter",
